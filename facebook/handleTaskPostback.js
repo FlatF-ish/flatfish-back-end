@@ -1,18 +1,22 @@
 const
   callSendApi = require('./sendMessage.js');
 
-function handleTaskPostback(sender_psid, postback)
+const dbmanager = require('../DBManager.js'),
+      messageGenerator = require('./../JSONParser.js'),
+      workOutTasksFromPaths = require('./workOutTasksFromPaths.js');
+
+var db;
+var pathDb;
+
+dbmanager.register((client) => {
+  db = client.db("facebookData")
+
+  pathDb = db.collection("pathData");
+});
+
+async function handleTaskPostback(sender_psid, postback)
 {
-  let response;
-  let payload = postback.payload;
-  
-  if (payload === 'reservation')
-  {
-    console.log('Reservation made');
-    response = { "text": "This is a work in progress, for now, do it yourself" }
-  }
-  
-  callSendApi(sender_psid, response);
+  workOutTasksFromPaths(sender_psid, postback.payload);
 }
 
 module.exports = handleTaskPostback;

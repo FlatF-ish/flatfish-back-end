@@ -1,35 +1,98 @@
 var app;
 
-const mongodb = require('mongodb');
+const dbManager = require('../DBManager.js'),
+      callSendApi = require('../facebook/sendMessage.js');
 
-const uri = "mongodb+srv://admin:WEv6C7X8vKmV9dqn@flatfishdb-47b1n.mongodb.net?retryWrites=true&w=majority";
-const client = mongodb.MongoClient;
-
-var connected = false;
 var houseDb;
 var userDb;
 var db;
 
-client.connect(uri, { useNewUrlParser: true }, (err, client) => {
-  if (err) throw err;
+dbManager.register((client) => {
   db = client.db("houseData");
   houseDb = db.collection("houses");
   userDb = db.collection("users");
-  connected = true;
 });
 
 function setApp(_app) {
   app = _app;
   
   app.post('/create-house', function(req, res) {
-    console.log(req);
-//     let pword = "a";
-//     makeNewHouse(pword)
-//       .then((userid, houseid) => {
-        
-//       })
-//       .catch(() => {res.status(400)});
-    res.status(200).send();
+     let pword = req.body.password;
+     makeNewHouse(pword)
+       .then((data) => {
+         res.status(200).send(JSON.stringify(data));
+       })
+       .catch(() => {res.status(400).send()});
+  });
+  
+  app.post('/join-house', function(req, res) {
+    let houseid = req.body.houseid
+    let pword = req.body.password
+    
+    console.log(houseid, pword)
+    joinHouse(houseid, pword).then((data) => {
+      res.status(200).send(JSON.stringify(data));
+    })
+    .catch((errCode) => {
+      res.status(errCode || 400).send();
+    })
+  });
+  
+  app.post('/set-user-data', function(req, res) {
+    setUserField("name", req.body.userid, req.body.name).then(() => {
+      userDb.findOne({userid: req.body.userid}).then((user) => {
+        var houseid = user.flatid;
+        console.log(houseid)
+        houseDb.findOne({flatid : houseid}).then((house) => {
+          console.log(house);
+          if(house) {
+            let members = house.members;
+            userDb.find({userid: {$in: members}, facebookid: {$exists: true}}).toArray().then((users) => {
+              console.log(users)
+              for(let user of users)
+              {
+                callSendApi(user.facebookid, {text : `Hey! ${req.body.name} has joined your flat on FlatFish!` });
+              }
+            });
+          }
+        });
+      });
+      res.status(200).send();
+    }).catch((errCode) => {res.status(errCode).send()});
+  });
+  
+  app.post('/set-facebook-id', function(req, res) {
+    setUserField("facebookid", req.body.userid, req.body.id).then(() => {
+      res.status(200).send();
+    }).catch((errCode) => {res.status(errCode).send()});
+  });
+}
+
+function setUserField(field, userid, value) {
+  
+  return new Promise((accept, reject) => {
+    userDb.updateOne({userid: userid, [field]: {$exists : false}}, {$set: {[field]: value}}).then((data) => {
+      if(data.modifiedCount == 1)
+        accept();
+      else
+        reject(401);
+    }).catch(() => {
+      reject(400);
+    });
+  })
+}
+
+function joinHouse(id, pword) {
+  return new Promise((accept, reject) => {
+    houseDb.findOne({flatid: id}).then((data) => {
+      if(!data) {reject(401); return; }
+      if(pword != data.pword) {reject(402); return; }
+      makeNewUser(id).then((uid) => {
+        houseDb.updateOne({flatid: id}, { $push: {"members": uid} }).then(() => {
+          accept({userid: uid, houseid: id});
+        });
+      });
+    });
   });
 }
 
@@ -54,7 +117,7 @@ function makeNewHouse(pword) {
       houseDb.insertOne({flatid: id, members: [], pword: pword}).then(() => {
         makeNewUser(id).then((uid) => {
           houseDb.updateOne({flatid: id}, { $push: {"members": uid} }).then(() => {
-            accept(id, uid);
+            accept({userid: uid, houseid: id});
           }).catch(() => {reject()});
         });
       }).catch(() => {reject()});

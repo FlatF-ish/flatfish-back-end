@@ -1,69 +1,29 @@
+const dbmanager = require('../DBManager.js');
+
 const
-  jsonParser = require('./../JSONParser.js'),
-  callSendApi = require('./sendMessage.js');
+  handleMessageWithAttachment = require('./handleAttachment.js'),
+  workOutTasksFromPaths = require('./workOutTasksFromPaths.js');
 
-function handleMessageWithAttachment(received_message)
-{
-  let response;
-  let attachment_url = received_message.attachments[0].payload.url;
-  response = {
-      "attachment":
-      {
-        "type": "template",
-        "payload":
-        {
-          "template_type": "generic",
-          "elements": [
-          {
-            "title": "Is this the correct picture?",
-            "subtitle": "Please tell me",
-            "image_url": attachment_url,
-            "buttons": [
-              {
-                "type": "postback",
-                "title": "Yes!",
-                "payload": "yes"
-              },
-              {
-                "type": "postback",
-                "title": "No!",
-                "payload": "no",
-              },
-            ],
-          }
-          ]
-        }
-      }
-    }
-  return response;
-}
+var pathDb;
+var db;
 
-function handleTaskMessage (sender_psid, received_message)
+dbmanager.register((client) => {
+  db = client.db("facebookData")
+
+  pathDb = db.collection("pathData");
+});
+
+async function handleTaskMessage (sender_psid, received_message)
 {
-  let response;
-  
-  if (received_message.text) 
-  {
-    if (received_message.text.toLowerCase() === "help")
+
+    if (received_message.attachments)
     {
-      response = jsonParser();
-      console.log(jsonParser());
-      console.log("Success");
+      handleMessageWithAttachment(received_message);
     }
     else
     {
-      response = 
-      {
-        "text": `{received_message.text} is not a recognised command, please enter a different one`  
-      }
+        workOutTasksFromPaths(sender_psid , received_message.text);
     }
-  }
-  else if (received_message.attachments)
-  {
-    response = handleMessageWithAttachment(received_message);
-  }
-  
-  callSendApi(sender_psid, response);
 }
 
 module.exports = handleTaskMessage;
