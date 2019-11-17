@@ -37,6 +37,7 @@ async function workOutTasksFromPaths (sender_psid, path)
       else
       {
         response = jsonParser.buttonMessageGenerator(val);
+        // This should call the relevant endpoint instead, making all events one big if, ifelse, etc. is bad and gross :)
         if (val.pathId = 'tp')
         {
           

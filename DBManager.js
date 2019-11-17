@@ -1,6 +1,6 @@
 const mongodb = require('mongodb');
 
-const uri = "mongodb+srv://admin:WEv6C7X8vKmV9dqn@flatfishdb-47b1n.mongodb.net?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.MONGO_ADMIN_NAME}:${process.env.MONGO_ADMIN_PASS}@${process.env.MONGO_DB}?retryWrites=true&w=majority`
 var client = mongodb.MongoClient;
 
 var callbacks = [];

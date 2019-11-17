@@ -1,9 +1,3 @@
-//var title = "How can I help";
-
-//var items = [{title: "Send response a", payload:"reservation"}, {title: "Send response b", payload:"reservation"}, {title: "Send response c", payload:"reservation"}]
-
-//var buttonJson = "";
-
 function buttonMessageGenerator(data) {
   var buttonJson = "";
   var title = data.title;
@@ -14,7 +8,7 @@ function buttonMessageGenerator(data) {
 }
 
 function integerMessageGenerator(data) {
-  console.log("hello");
+  //console.log("hello");
   return {
     text: `How long would you like to reserve it for?`
   }

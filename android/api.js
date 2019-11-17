@@ -1,11 +1,15 @@
 var app;
 
+// Should export all endpoint names to a dedicated file, along with database and collections names
+
 const dbManager = require('../DBManager.js'),
-      callSendApi = require('../facebook/sendMessage.js');
+      callSendApi = require('../facebook/sendMessage.js'),
+      bcrypt = require('bcryptjs');
 
 var houseDb;
 var userDb;
 var db;
+var salt = 8;
 
 dbManager.register((client) => {
   db = client.db("houseData");
@@ -29,7 +33,6 @@ function setApp(_app) {
     let houseid = req.body.houseid
     let pword = req.body.password
     
-    console.log(houseid, pword)
     joinHouse(houseid, pword).then((data) => {
       res.status(200).send(JSON.stringify(data));
     })
@@ -42,13 +45,10 @@ function setApp(_app) {
     setUserField("name", req.body.userid, req.body.name).then(() => {
       userDb.findOne({userid: req.body.userid}).then((user) => {
         var houseid = user.flatid;
-        console.log(houseid)
         houseDb.findOne({flatid : houseid}).then((house) => {
-          console.log(house);
           if(house) {
             let members = house.members;
             userDb.find({userid: {$in: members}, facebookid: {$exists: true}}).toArray().then((users) => {
-              console.log(users)
               for(let user of users)
               {
                 callSendApi(user.facebookid, {text : `Hey! ${req.body.name} has joined your flat on FlatFish!` });
@@ -66,6 +66,9 @@ function setApp(_app) {
       res.status(200).send();
     }).catch((errCode) => {res.status(errCode).send()});
   });
+  
+  
+  return module.exports; // Allows chaining functions, e.g. require('this').setApp().somethingElse();
 }
 
 function setUserField(field, userid, value) {
@@ -86,7 +89,7 @@ function joinHouse(id, pword) {
   return new Promise((accept, reject) => {
     houseDb.findOne({flatid: id}).then((data) => {
       if(!data) {reject(401); return; }
-      if(pword != data.pword) {reject(402); return; }
+      if(!bcrypt.compareSync(pword, data.pword)) {reject(402); return; }
       makeNewUser(id).then((uid) => {
         houseDb.updateOne({flatid: id}, { $push: {"members": uid} }).then(() => {
           accept({userid: uid, houseid: id});
@@ -114,7 +117,8 @@ function makeNewHouse(pword) {
       do {
         id = makeid(5);
       } while(data.indexOf(id) != -1);
-      houseDb.insertOne({flatid: id, members: [], pword: pword}).then(() => {
+      var hash = bcrypt.hashSync(pword, 8)
+      houseDb.insertOne({flatid: id, members: [], pword: hash}).then(() => {
         makeNewUser(id).then((uid) => {
           houseDb.updateOne({flatid: id}, { $push: {"members": uid} }).then(() => {
             accept({userid: uid, houseid: id});

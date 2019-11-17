@@ -36,7 +36,8 @@ dbManager.register((client) => {
 
 
 // Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+var port = process.env.PORT || 1337
+app.listen(port, () => console.log('Listening on port '+port));
 
 
 app.use('/', bodyParser.urlencoded({
@@ -124,34 +125,35 @@ app.post('/webhook', (req, res) => {
 
 });
 
-// Accepts GET requests at the /webhook endpoint
-app.get('/webhook', (req, res) => {
+// This not needed anymore???
+// // Accepts GET requests at the /webhook endpoint
+// app.get('/webhook', (req, res) => {
   
-  /** UPDATE YOUR VERIFY TOKEN **/
-  const VERIFY_TOKEN = "flatf-ish-demo";
+//   /** UPDATE YOUR VERIFY TOKEN **/
+//   const VERIFY_TOKEN = "flatf-ish-demo";
   
-  // Parse params from the webhook verification request
-  let mode = req.query['hub.mode'];
-  let token = req.query['hub.verify_token'];
-  let challenge = req.query['hub.challenge'];
+//   // Parse params from the webhook verification request
+//   let mode = req.query['hub.mode'];
+//   let token = req.query['hub.verify_token'];
+//   let challenge = req.query['hub.challenge'];
     
-  // Check if a token and mode were sent
-  if (mode && token) {
+//   // Check if a token and mode were sent
+//   if (mode && token) {
   
-    // Check the mode and token sent are correct
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+//     // Check the mode and token sent are correct
+//     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       
-      // Respond with 200 OK and challenge token from the request
-      console.log('WEBHOOK_VERIFIED');
-      res.status(200).send(challenge);
+//       // Respond with 200 OK and challenge token from the request
+//       console.log('WEBHOOK_VERIFIED');
+//       res.status(200).send(challenge);
     
-    } else {
-      // Responds with '403 Forbidden' if verify tokens do not match
-      console.log("got " + mode);
-      res.status(200);
-    }
-  }
-});
+//     } else {
+//       // Responds with '403 Forbidden' if verify tokens do not match
+//       console.log("got " + mode);
+//       res.status(200);
+//     }
+//   }
+// });
 
 
 
