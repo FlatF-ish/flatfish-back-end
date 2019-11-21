@@ -66,6 +66,22 @@ function setApp(_app) {
       res.status(200).send();
     }).catch((errCode) => {res.status(errCode).send()});
   });
+
+  // This will get the call to change the light setting
+  app.get('/control-lighting', function(req, res) {
+    // At some point this will actually do something
+    console.log("Request to change lighting made");
+    console.log(`You requested lighting mode ${1}`);
+
+    // I think we need to do a post and have a separate API for Facebook
+    // My thinking is, have a separate manager for FB that will hit all of the endpoints with post requests
+    // We can populate the data for the posts based on what we know
+    // We will also kow the facebook id when we make the request so will be able to find user id
+    // App will already know user ID so by the time we get to this point it will be good already
+    // Should query by the same name
+    // I think the part that handles facebook should do a query to ge tthe user ID, that way, both app and facebook api can make same request to here
+    callSendApi(user.facebookid, {text : `Hey! ${req.body.name} has joined your flat on FlatFish!` });
+  });
   
   
   return module.exports; // Allows chaining functions, e.g. require('this').setApp().somethingElse();

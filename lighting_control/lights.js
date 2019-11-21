@@ -12,10 +12,11 @@
 
 // Themes of work
 // (PRIORITY)
-// Routing
+// Routing - need to build the whole table thing
 // Facebook
 // Controlling the lights
 
 // (NEXT STEPS)
 // App control panel
 // Associating specific lights - maybe? - might need a double metadata
+
