@@ -14,8 +14,8 @@
     // Append the prrocessed metadata to the existing path
 
     
-const dbmanager = require('../DBManager.js');
-
+const dbmanager = require('../../DBManager.js'),
+      callSendApi = require('../sendMessage.js');
 var db;
 var pathDb;
 
@@ -44,12 +44,41 @@ function setPathOnMessage() {
         case "action":
             userMessageTable.path = route.path;
             if(route.requiresMeta) {
-                // Send a message asking for metadata of type
-                console.log("You require" + route.mataType)
+
+                userMessageTable.pendingResponse = true;
                 userMessageTable.metaTypeExpected = route.metaType;
+                console.log("You require" + route.mataType)
+                
+                // Need to get sender_psid
+                callSendApi(sender_psid, {text: `Please enter ${userMessageTable.metaTypeExpected}`});
+
+                
+                
+                
+                // Hendle it in a separate function
+                // If a message is sent and userMessageTable.pendingResponse === true do the things in that function
+                // Get the metadata .then(function (metadata) { processMetadata(metadata).then(function(processedMetadata){Do something with it})})
+                
+                // ---------- Shuld all be in another function
+                // This function will only be called if a message is sent from the user and userMessage.pendingResponse is true
+                // That means that they have entered metadata
+                let data = {meta: processedMetadata};
+                fetch(userMessageTable.path, {
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }).then(res => {
+                    userMessageTable.pendingResponse = false;
+                    console.log("Successfully made the request");
+                })
+
+                // ----------
             } else {
                 console.log("End of action");
                 console.log("Hit endpoint from here");
+                
+                fetch(userMessageTable.path).then(res => {
+                    console.log("successfully made the request");
+                });
             }
             break;
         case "generic":
