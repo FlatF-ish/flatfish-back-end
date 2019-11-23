@@ -18,14 +18,14 @@ const
   app = express().use(body_parser.json()), // creates express http server
   bodyParser = require("body-parser"),
   jsonParser = require('./JSONParser.js'),
-  sendMessage = require('./facebook/sendMessage.js'),
-  processMessage = require('./facebook/processTaskMessage.js'),
+  sendMessage = require('./messaging/sendMessage.js.js'),
+  processMessage = require('./messaging/processTaskMessage.js.js'),
   dbManager = require('./DBManager.js'),
-  callSendApi = require('./facebook/sendMessage.js'),
-  processPostback = require('./facebook/handleTaskPostback.js');
+  callSendApi = require('./messaging/sendMessage.js.js'),
+  processPostback = require('./messaging/handleTaskPostback.js.js');
 
 require('./android/api.js').setApp(app);
-require('./facebook/message_paths/pathSetup.js').setApp(app)
+require('./messaging/message_paths/pathSetup.js.js').setApp(app)
 
 var usersDb;
 

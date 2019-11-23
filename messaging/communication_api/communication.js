@@ -5,8 +5,8 @@
 // This part of the system will also be responsible dealing with the routes in the routing table
 // Only do things on end of action - either meta is false - action ends or meta is true and data is provided (couold be more complex and require multipl emeta in future) - this is a simplification
 
-const dbManager = require('../DBManager.js'),
-      callSendApi = require('../facebook/sendMessage.js');
+const dbManager = require('../DBManager.js.js'),
+      callSendApi = require('../facebook/sendMessage.js.js');
 
 var userDb;
 var db;
