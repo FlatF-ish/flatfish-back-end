@@ -46,6 +46,12 @@ async function workOutTasksFromPaths (sender_psid, path)
             // Get their message id
             // Send them a message saying that it is their turn to get it
             // Give them options to remind me later or done it
+
+            // ---- This if shouldn't need to be here - sould now be an endpoint
+            // By setting a taskPath on the user it means that when the action is complete that the action can just be executed
+            // When tp entered, the taskPath on the user will be set to the value of the path in the database
+            // If metadata is false and the action is complete then execute the action
+            // If metadata is true and no response, then wait for metadata before executing the action
         }
         
         if (val.pathId = 'kr')

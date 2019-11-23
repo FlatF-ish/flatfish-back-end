@@ -31,7 +31,7 @@ dbmanager.register((client) => {
 function setEndpointOnMessage(sender_psid, path) {
     const route = await pathDb.findOne({ pathId: path.toLowerCase() });
     
-    if (userMessageTable.requiresMeta){
+    if (userMessageTable.requiresMeta) {
         if (userMessageTable.metaDataType === "int") {
             console.log("parse message as int");
             console.log("Ensure that only an int is remaining");
@@ -70,16 +70,30 @@ function setEndpointOnMessage(sender_psid, path) {
     }
 }
 
-function handleMetadata(sender_psid, userMessage)
-{
-    // If a message is sent and userMessageTable.pendingResponse === true do the things in that function
-    // Get the metadata .then(function (metadata) { processMetadata(metadata).then(function(processedMetadata){Do something with it})})
-    
-    // ---------- Should all be in another function
-    // This function will only be called if a message is sent from the user and userMessage.pendingResponse is true
-    // That means that they have entered metadata
+function processMetadata(messyMeta, metaType) {
 
-    let data = {meta: processedMetadata};
+    var words = messyMeta.split(' ');
+    
+    let cleanMeta;
+
+    if(metaType === 'int') {
+        for(let word in words) {
+            if(word.isInteger()) {
+                cleanMeta = word;
+                break;
+            }
+        }
+    }
+
+    // For checking strings could put possible values in the database and do a comparison against them
+    // Could loop through the array looking to see if any of those options have been entered
+
+    return cleanMeta;
+}
+
+function handleMetadata(sender_psid, userMetaMessage)
+{
+    let data = {meta: processMetadata(userMetaMessage, userMessageTable.metaTypeExpected)};
     fetch(userMessageTable.path, {
         method: "POST",
         body: JSON.stringify(data)
