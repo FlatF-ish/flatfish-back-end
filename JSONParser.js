@@ -25,8 +25,7 @@ function buttonGenerator(item)
 
 function jsonResponse(title, buttonJson)
 {
-  if(title === "")
-  {
+  if(title === "") {
     title = "Well that's embarrasing, there's no question, but here are some options anyway:"
   }
   

@@ -18,12 +18,9 @@ async function handleTaskMessage (sender_psid, received_message)
     if (userMessageTable.pendingResponse) {
       routingLogic.handleMetadata(sender_psid, received_message)
     } else {
-      if (received_message.attachments)
-      {
+      if (received_message.attachments) {
         handleMessageWithAttachment(received_message);
-      }
-      else
-      {
+      } else {
           workOutTasksFromPaths(sender_psid , received_message.text);
       }
     }

@@ -17,8 +17,7 @@ dbmanager.register((client) => {
   pathDb = db.collection("pathData");
 });
 
-async function handleTaskPostback(sender_psid, postback)
-{
+async function handleTaskPostback(sender_psid, postback) {
   if (userMessageTable.pendingResponse) {
     routingLogic.handleMetadata(sender_psid, path)
   } else {
