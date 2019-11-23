@@ -1,6 +1,7 @@
-const jsonParser = require('./../JSONParser.js');
-const dbmanager = require('../DBManager.js');
-const callSendApi = require('./sendMessage.js');
+const jsonParser = require('./../JSONParser.js'),
+      dbmanager = require('../DBManager.js'),
+      callSendApi = require('./sendMessage.js'),
+      routingLogic = require('./message_paths/routingLogic.js');
 
 var db;
 var pathDb;
@@ -18,12 +19,12 @@ async function workOutTasksFromPaths (sender_psid, path)
 {
   let response;
   
-  if (path) 
+  if (path)
   { 
     const val = await db.collection('pathData').findOne({ pathId: path.toLowerCase() });
     if(val)
     {
-      
+      routingLogic.setEndpointOnMessage(sender_psid, path);
       if(val.type === "integer")
       {
         //const house = await houseDb.findOne({ : });

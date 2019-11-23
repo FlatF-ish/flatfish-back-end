@@ -15,14 +15,17 @@ dbmanager.register((client) => {
 
 async function handleTaskMessage (sender_psid, received_message)
 {
-
-    if (received_message.attachments)
-    {
-      handleMessageWithAttachment(received_message);
-    }
-    else
-    {
-        workOutTasksFromPaths(sender_psid , received_message.text);
+    if (userMessageTable.pendingResponse) {
+      routingLogic.handleMetadata(sender_psid, received_message)
+    } else {
+      if (received_message.attachments)
+      {
+        handleMessageWithAttachment(received_message);
+      }
+      else
+      {
+          workOutTasksFromPaths(sender_psid , received_message.text);
+      }
     }
 }
 

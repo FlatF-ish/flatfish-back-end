@@ -1,9 +1,12 @@
 const
-  callSendApi = require('./sendMessage.js');
+  
 
 const dbmanager = require('../DBManager.js'),
+      callSendApi = require('./sendMessage.js'),
       messageGenerator = require('./../JSONParser.js'),
-      workOutTasksFromPaths = require('./workOutTasksFromPaths.js');
+      workOutTasksFromPaths = require('./workOutTasksFromPaths.js'),
+      routingLogic = require('./message_paths/routingLogic.js');
+
 
 var db;
 var pathDb;
@@ -16,7 +19,11 @@ dbmanager.register((client) => {
 
 async function handleTaskPostback(sender_psid, postback)
 {
-  workOutTasksFromPaths(sender_psid, postback.payload);
+  if (userMessageTable.pendingResponse) {
+    routingLogic.handleMetadata(sender_psid, path)
+  } else {
+    workOutTasksFromPaths(sender_psid, postback.payload);
+  }
 }
 
 module.exports = handleTaskPostback;
