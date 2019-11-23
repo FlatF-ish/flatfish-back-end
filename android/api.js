@@ -4,6 +4,7 @@ var app;
 
 const dbManager = require('../DBManager.js'),
       callSendApi = require('../facebook/sendMessage.js'),
+      communication = require('../facebook/communication_api/communication.js.js'),
       bcrypt = require('bcryptjs');
 
 var houseDb;
@@ -96,8 +97,9 @@ function setApp(_app) {
         // At some point this will actually do something
     console.log("Request to change lighting made");
     console.log(`You requested lighting mode ${req.body.meta}`);
-        
-    callSendApi(user.facebookid, {text : `Lighting changed to mode ${req.body.meta}` });
+    
+    let message = `Lighting changed to mode ${req.body.meta}`;
+    communication.sendAll(userId, message);
   });  
   
   return module.exports; // Allows chaining functions, e.g. require('this').setApp().somethingElse();
