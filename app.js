@@ -48,6 +48,11 @@ app.use('/create-house', body_parser.json());
 app.use('/join-house', body_parser.json());
 app.use('/set-name', body_parser.json());
 app.use('/set-facebook-id', body_parser.json());
+app.use('/reserve/oven', body_parser.json());
+app.use('/reserve/wasing-machine', body_parser.json());
+app.use('/out/toilet-paper', body_parser.json());
+app.use('/out/kitchen-roll', body_parser.json());
+app.use('/lighting-control', body_parser.json());
 
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
@@ -124,27 +129,6 @@ app.post('/webhook', (req, res) => {
   }
 
 });
-
-app.post('/reserve/oven', (req, res) => {
-  callSendApi
-});
-
-app.post('/reserve/wasing-machine', (req, res) => {
-
-});
-
-app.post('/out/toilet-paper', (req, res) => {
-
-});
-
-app.post('/out/kitchen-roll', (req, res) => {
-
-});
-
-app.post('/lighting-control', (req, res) => {
-
-});
-
 
 // This not needed anymore???
 // // Accepts GET requests at the /webhook endpoint

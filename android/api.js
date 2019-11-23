@@ -67,22 +67,38 @@ function setApp(_app) {
     }).catch((errCode) => {res.status(errCode).send()});
   });
 
-  // This will get the call to change the light setting
-  app.get('/control-lighting', function(req, res) {
-    // At some point this will actually do something
-    console.log("Request to change lighting made");
-    console.log(`You requested lighting mode ${1}`);
 
-    // I think we need to do a post and have a separate API for Facebook
-    // My thinking is, have a separate manager for FB that will hit all of the endpoints with post requests
-    // We can populate the data for the posts based on what we know
-    // We will also kow the facebook id when we make the request so will be able to find user id
-    // App will already know user ID so by the time we get to this point it will be good already
-    // Should query by the same name
-    // I think the part that handles facebook should do a query to ge tthe user ID, that way, both app and facebook api can make same request to here
-    callSendApi(user.facebookid, {text : `Hey! ${req.body.name} has joined your flat on FlatFish!` });
+
+  app.post('/reserve/oven', (req, res) => {
+
   });
   
+  app.post('/reserve/wasing-machine', (req, res) => {
+  
+  });
+  
+  app.post('/out/toilet-paper', (req, res) => {
+  
+  });
+  
+  app.post('/out/kitchen-roll', (req, res) => {
+  
+  });
+  
+  // Post to change the light setting
+  // Data on post should include user Id - retrieve using unique Id of existing communication
+  // Send API should not be called here - I think it should fan out to another function that will handle responses to other platforms
+  // What I mean is this function will call a generic "notify user" function with userId as parameter
+  // This will then call all relevant message functions e.g. facebook, discord passing in user ID - they can then query for their unique user IDs
+  // This means there should be  a decent separation of concerns
+  app.post('/lighting-control', (req, res) => {
+
+        // At some point this will actually do something
+    console.log("Request to change lighting made");
+    console.log(`You requested lighting mode ${req.body.meta}`);
+        
+    callSendApi(user.facebookid, {text : `Lighting changed to mode ${req.body.meta}` });
+  });  
   
   return module.exports; // Allows chaining functions, e.g. require('this').setApp().somethingElse();
 }
