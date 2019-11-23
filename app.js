@@ -125,6 +125,27 @@ app.post('/webhook', (req, res) => {
 
 });
 
+app.post('/reserve/oven', (req, res) => {
+  callSendApi
+});
+
+app.post('/reserve/wasing-machine', (req, res) => {
+
+});
+
+app.post('/out/toilet-paper', (req, res) => {
+
+});
+
+app.post('/out/kitchen-roll', (req, res) => {
+
+});
+
+app.post('/lighting-control', (req, res) => {
+
+});
+
+
 // This not needed anymore???
 // // Accepts GET requests at the /webhook endpoint
 // app.get('/webhook', (req, res) => {
