@@ -3,8 +3,8 @@ var app;
 // Should export all endpoint names to a dedicated file, along with database and collections names
 
 const dbManager = require('../DBManager.js'),
-      callSendApi = require('../messaging/sendMessage.js.js'),
-      communication = require('../messaging/communication_api/communication.js.js.js'),
+      callSendApi = require('../messaging/sendMessage.js'),
+      communication = require('../messaging/communication_api/communication.js'),
       bcrypt = require('bcryptjs');
 
 var houseDb;

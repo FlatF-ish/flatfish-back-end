@@ -28,7 +28,7 @@ dbmanager.register((client) => {
 });
 
 
-function setEndpointOnMessage(sender_psid, path) {
+async function setEndpointOnMessage(sender_psid, path) {
     const route = await pathDb.findOne({ pathId: path.toLowerCase() });
     
     if (userMessageTable.requiresMeta) {

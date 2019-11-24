@@ -10,6 +10,9 @@
 
 'use strict';
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 // Imports dependencies and set up http server
 const 
   request = require('request'),
@@ -18,14 +21,16 @@ const
   app = express().use(body_parser.json()), // creates express http server
   bodyParser = require("body-parser"),
   jsonParser = require('./JSONParser.js'),
-  sendMessage = require('./messaging/sendMessage.js.js'),
-  processMessage = require('./messaging/processTaskMessage.js.js'),
+  sendMessage = require('./messaging/sendMessage.js'),
+  processMessage = require('./messaging/processTaskMessage.js'),
   dbManager = require('./DBManager.js'),
-  callSendApi = require('./messaging/sendMessage.js.js'),
-  processPostback = require('./messaging/handleTaskPostback.js.js');
+  callSendApi = require('./messaging/sendMessage.js'),
+  processPostback = require('./messaging/handleTaskPostback.js');
+
+
 
 require('./android/api.js').setApp(app);
-require('./messaging/message_paths/pathSetup.js.js').setApp(app)
+require('./messaging/message_paths/pathSetup.js').setApp(app)
 
 var usersDb;
 
@@ -53,6 +58,10 @@ app.use('/reserve/wasing-machine', body_parser.json());
 app.use('/out/toilet-paper', body_parser.json());
 app.use('/out/kitchen-roll', body_parser.json());
 app.use('/lighting-control', body_parser.json());
+
+app.get("/", (req, res) => {
+  res.status(200).send("Its up!");
+})
 
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  

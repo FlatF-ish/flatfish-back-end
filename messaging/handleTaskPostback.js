@@ -1,5 +1,4 @@
-const
-  
+
 
 const dbmanager = require('../DBManager.js'),
       callSendApi = require('./sendMessage.js'),
