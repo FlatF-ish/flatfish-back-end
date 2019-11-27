@@ -10,6 +10,9 @@
 
 'use strict';
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 // Imports dependencies and set up http server
 const 
   request = require('request'),
