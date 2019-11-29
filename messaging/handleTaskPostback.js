@@ -1,27 +1,27 @@
 
 
-const dbmanager = require('../DBManager.js'),
-      callSendApi = require('./sendMessage.js'),
-      messageGenerator = require('./../JSONParser.js'),
-      workOutTasksFromPaths = require('./workOutTasksFromPaths.js'),
-      routingLogic = require('./message_paths/routingLogic.js');
+// dbmanager = require("../DBManager.js"),
+// callSendApi = require("./sendMessage.js"),
+// messageGenerator = require("./../JSONParser.js"),
+const	workOutTasksFromPaths = require("./workOutTasksFromPaths.js"),
+	routingLogic = require("./message_paths/routingLogic.js");
 
 
 var db;
-var pathDb;
+// var pathDb;
 
-dbmanager.register((client) => {
-  db = client.db("facebookData")
+// dbmanager.register((client) => {
+// 	db = client.db("facebookData");
+// 	pathDb = db.collection("pathData");
+// });
 
-  pathDb = db.collection("pathData");
-});
-
-async function handleTaskPostback(sender_psid, postback) {
-  if (userMessageTable.pendingResponse) {
-    routingLogic.handleMetadata(sender_psid, path)
-  } else {
-    workOutTasksFromPaths(sender_psid, postback.payload);
-  }
+// This function will basically be removed completely
+async function handleTaskPostback(senderPSID, postback) {
+	if (userMessageTable.pendingResponse) {
+		routingLogic.handleMetadata(senderPSID, path);
+	} else {
+		workOutTasksFromPaths(senderPSID, postback.payload);
+	}
 }
 
 module.exports = handleTaskPostback;

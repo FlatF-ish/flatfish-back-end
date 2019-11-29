@@ -1,10 +1,10 @@
-//TO-DO
+// TO-DO
 // Create a way for rotas to be written to the database
-    // Create an endpoint to access speecific information    
-    // Keep track of who's turn it is to buy toilet paper next
-    // Keep track of who's turn it is to buy kitchen paper next
-    // Keep track of the current week
-    // Allow 1 user to send a message to trigger notification for another user
+// Create an endpoint to access speecific information
+// Keep track of who's turn it is to buy toilet paper next
+// Keep track of who's turn it is to buy kitchen paper next
+// Keep track of the current week
+// Allow 1 user to send a message to trigger notification for another user
 
 // More to add - but I'm a sleeepy boi
 
@@ -45,10 +45,10 @@ function notifyForToday() {
 // Notify the appropriate people at given time
 function notifyOfTask() {
 
-    notifyForTomorrow();
-    notifyForToday();
+	notifyForTomorrow();
+	notifyForToday();
 
-    // if day is sunday do this
-    weeklyOverviewOfTasks();
-    
+	// if day is sunday do this
+	weeklyOverviewOfTasks();
+
 }

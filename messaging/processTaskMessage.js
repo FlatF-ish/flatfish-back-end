@@ -1,29 +1,27 @@
-const dbmanager = require('../DBManager.js');
+// const dbmanager = require("../DBManager.js");
 
-const
-  handleMessageWithAttachment = require('./handleAttachment.js'),
-  workOutTasksFromPaths = require('./workOutTasksFromPaths.js');
+const	handleMessageWithAttachment = require("./handleAttachment.js"),
+	workOutTasksFromPaths = require("./workOutTasksFromPaths.js");
 
-var pathDb;
-var db;
+// var pathDb;
+// var db;
 
-dbmanager.register((client) => {
-  db = client.db("facebookData")
+// dbmanager.register((client) => {
+// 	db = client.db("facebookData");
 
-  pathDb = db.collection("pathData");
-});
+// 	pathDb = db.collection("pathData");
+// });
 
-async function handleTaskMessage (sender_psid, received_message)
-{
-    if (userMessageTable.pendingResponse) {
-      routingLogic.handleMetadata(sender_psid, received_message)
-    } else {
-      if (received_message.attachments) {
-        handleMessageWithAttachment(received_message);
-      } else {
-          workOutTasksFromPaths(sender_psid , received_message.text);
-      }
-    }
+async function handleTaskMessage(senderPSID, receivedMessage) {
+	if (userMessageTable.pendingResponse) {
+		routingLogic.handleMetadata(senderPSID, receivedMessage);
+	} else {
+		if (receivedMessage.attachments) {
+			handleMessageWithAttachment(receivedMessage);
+		} else {
+			workOutTasksFromPaths(senderPSID, receivedMessage.text);
+		}
+	}
 }
 
 module.exports = handleTaskMessage;
