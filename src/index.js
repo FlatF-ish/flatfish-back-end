@@ -13,7 +13,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-global.include = require.main.require;
+global.include = (path) => require.main.require(path); // Oddly, doing global.include = require.main.require doesn't work?
 
 // Imports dependencies and set up http server
 const
