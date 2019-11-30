@@ -27,7 +27,7 @@ global.app = app; // This might be nicer than calling setApp on some includes
 require("./bot/facebook/sendMessage.js");
 require("./bot/facebook/receiveMessage.js");
 
-//require("./api/apis/android.js").setApp(app);
+// require("./api/apis/android.js").setApp(app);
 
 var usersDb;
 
