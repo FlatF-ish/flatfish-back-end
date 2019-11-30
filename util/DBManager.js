@@ -6,7 +6,7 @@ var client = mongodb.MongoClient;
 var callbacks = [];
 var connected = false;
 
-client.connect(uri, { useNewUrlParser: true }, (err, _client) => {
+client.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, _client) => {
 	if (err) throw err;
 	client = _client;
 	connected = true;

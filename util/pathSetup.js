@@ -1,7 +1,7 @@
-const dbManager = require("../../DBManager.js");
+const dbManager = global.include("./util/DBManager.js");
 
-var app;
 var pathDb;
+var app = global.app;
 
 dbManager.register((client) => {
 	var db = client.db("facebookData");
@@ -42,15 +42,10 @@ function addPathsToDatabase() {
 	);
 }
 
-function setApp(_app) {
-	app = _app;
-	app.get("/reset-paths", (req, res) => {
-		if (!dbManager.isConnected()) { res.status(400).send("Try again my g"); return; }
-		pathDb.deleteMany().then(() => {
-			addPathsToDatabase();
-			res.status(200).send("All done!");
-		});
+app.get("/reset-paths", (req, res) => {
+	if (!dbManager.isConnected()) { res.status(400).send("Try again my g"); return; }
+	pathDb.deleteMany().then(() => {
+		addPathsToDatabase();
+		res.status(200).send("All done!");
 	});
-}
-
-module.exports = { setApp: setApp };
+});

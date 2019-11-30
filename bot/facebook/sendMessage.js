@@ -1,6 +1,14 @@
-const request = require("request");
+const request = require("request"),
+	bot = global.include("./bot/botHandler.js"),
+	generators = global.include("./bot/facebook/messageGenerators.js");
 
-function callSendApi(senderPSID, response) {
+// Send a facebook message
+bot.register("facebook", function(user, message) {
+	const response = { text: message };
+	sendMessage(user.facebookid, response);
+});
+
+function sendMessage(senderPSID, response) {
 	const requestBody = {
 		recipient: {
 			id: senderPSID
@@ -23,5 +31,3 @@ function callSendApi(senderPSID, response) {
 		}
 	});
 }
-
-module.exports = callSendApi;
