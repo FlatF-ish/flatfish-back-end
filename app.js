@@ -52,6 +52,10 @@ app.use('/join-house', body_parser.json());
 app.use('/set-name', body_parser.json());
 app.use('/set-facebook-id', body_parser.json());
 
+app.get("/", (req, res) => {
+	res.status(200).send("Its up!");
+});
+
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
   if (!dbManager.isConnected()) return;
