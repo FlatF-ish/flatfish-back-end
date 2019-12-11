@@ -13,6 +13,23 @@ dbManager.register((client) => {
 	usersDb = db.collection("users");
 });
 
+// Verifies the webhook with a get request?
+// https://developers.facebook.com/docs/messenger-platform/getting-started/webhook-setup/
+app.get('/webhook', (req, res) => {
+	let mode = req.query['hub.mode'];
+	let token = req.query['hub.verify_token'];
+	let challenge = req.query['hub.challenge'];
+	
+	if (mode && token) {
+	  if (mode === 'subscribe' && token === process.env.VERIFY_TOKEN) {
+		console.log('WEBHOOK_VERIFIED');
+		res.status(200).send(challenge)
+	  } else {
+		res.sendStatus(403);
+	  }
+	}
+  })
+
 // Accepts POST requests at /webhook endpoint
 app.post("/webhook", (req, res) => {
 	if (!dbManager.isConnected()) return;
