@@ -32,9 +32,9 @@ app.post("/webhook", (req, res) => {
 				// Get Post Scoped ID
 				const senderPSID = webhookEvent.sender.id;
 
+				// Get user from ID, if user doesn't exist, it will be null, which is fine
 				usersDb.findOne({ facebookid: senderPSID }).then((user) => {
-					// Check the type of request
-					bot.processMessage("facebook", user, webhookEvent.message ? webhookEvent.message : webhookEvent.postback);
+					bot.processMessage("facebook", user, webhookEvent.message !== undefined ? webhookEvent.message : webhookEvent.postback);
 				});
 			}
 

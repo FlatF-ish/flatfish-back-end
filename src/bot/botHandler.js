@@ -34,8 +34,8 @@ function sendAll(userId, message) {
 		}
 	});
 }
-
-function processMessage(botName, user, message) {
+// BSID = Bot specific ID, like facebookId or discordId
+function processMessage(botName, user, BSID, message) {
 	const state = botStates[botName];
 	if (state === undefined) throw new Error("Invalid bot name \"" + botName + "\"");
 

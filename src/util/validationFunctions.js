@@ -1,11 +1,11 @@
 var validationFuncs = {};
-var userDb;
+var houseDb;
 
-const dbManager = require("./util/DBManager.js");
+const dbManager = global.include("./util/DBManager.js");
 
 dbManager.register((client) => {
 	const db = client.db("houseData");
-	userDb = db.collection("users");
+	houseDb = db.collection("houses");
 });
 
 // "Validation Function" has been shortened to VF in this file.
@@ -77,8 +77,8 @@ function checkValidFunctionReturn(val, name) {
 	This is the function that calls the VF and waits if the VF is asynchonous
 	It then checks the VF gave a valid output and returns that
 */
-async function handleValidationFunction(validFunc, val, name, userId, houseId) {
-	var ret = validFunc(val, userId, houseId);
+async function handleValidationFunction(validFunc, val, name, user, house) {
+	var ret = validFunc(val, user, house);
 	if (ret instanceof Promise) {
 		ret = await ret;
 	}
@@ -88,23 +88,22 @@ async function handleValidationFunction(validFunc, val, name, userId, houseId) {
 /*
 	First check dbManager is connect
 	Then check the VF exists, if not throw a promise error
-	If no userId given (aka anonymous call), return the promise given by handleValidationFunction
-	Else, find the user's houseId, then do the same
+	If no user given (aka anonymous call), return the promise given by handleValidationFunction
+	Else, find the user's house, then do the same
 */
-function callValidationFunction(name, val, userId) {
+function callValidationFunction(name, val, user) {
 	if (!dbManager.isConnected()) { return promiseError("Called too early, database not connected."); }
 
 	const validFunc = validationFuncs[name];
 	if (validFunc === undefined) { return promiseError("No such validation function."); }
 
-	if (userId === undefined) {
+	if (user === undefined) {
 		return handleValidationFunction(validFunc, val, name);
 	} else {
-		return userDb.findOne({ userid: userId }).then(async (user) => {
-			const houseId = user.houseid;
+		return houseDb.findOne({ houseid: user.houseid }).then(async (house) => {
 			// This will pass the promise from handleValidationFunction to be handled by the next "then" in this chain.
 			// This "then" will be the one attached to callValidationFunction externally, due to the return before "userDb"
-			return handleValidationFunction(validFunc, val, name, userId, houseId);
+			return handleValidationFunction(validFunc, val, name, user, house);
 		});
 	}
 }
